@@ -1,6 +1,7 @@
 import Avatar from "../Avatar";
 
-const Twits = ({ id, username, message, avatar }) => {
+const Twits = ({ id, username, message, avatar, createdAt }) => {
+  const normalizedDate = new Date(createdAt.seconds).toString();
   return (
     <>
       <article>
@@ -8,7 +9,10 @@ const Twits = ({ id, username, message, avatar }) => {
           <Avatar alt={username} src={avatar} />
         </div>
         <section>
-          <strong>{username}</strong>
+          <header>
+            <strong>{username}</strong>
+            <date>{normalizedDate}</date>
+          </header>
           <p>{message}</p>
         </section>
       </article>
@@ -18,7 +22,7 @@ const Twits = ({ id, username, message, avatar }) => {
           article {
             display: flex;
             padding: 10px 15px;
-            border-bottom: 2px solid #eaf7ff;
+            border-bottom: 2px solid #eee;
           }
 
           div {

@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import Twit from "../../components/Twits";
+import { fetchLatestTwitts } from "../../firebase/client";
+import useUser from "../../hooks/useUser";
 
 const HomePage = () => {
   const [timeline, setTimeLine] = useState([]);
-
+  const user = useUser();
   useEffect(() => {
-    fetch("http://localhost:3000/api/statuses/time_line")
-      .then((res) => res.json())
-      .then(setTimeLine)
-      .catch((err) => console.log(err));
-  }, []);
+    user &&
+      fetchLatestTwitts()
+        .then(setTimeLine)
+        .catch((err) => console.log(err));
+  }, [user]);
   return (
     <>
       <div>
@@ -17,13 +19,14 @@ const HomePage = () => {
           <h2>Inicio</h2>
         </header>
         <section>
-          {timeline.map(({ id, message, avatar, username }) => (
+          {timeline.map(({ id, content, avatar, username, createdAt }) => (
             <Twit
               key={id}
               id={id}
-              message={message}
+              message={content}
               avatar={avatar}
               username={username}
+              createdAt={createdAt}
             />
           ))}
         </section>
@@ -33,6 +36,8 @@ const HomePage = () => {
         {`
           header {
             display: flex;
+            background: #ffffffaa;
+            backdrop-filter: blur(5px);
             position: sticky;
             height: 49px;
             top: 0;
@@ -46,14 +51,15 @@ const HomePage = () => {
           nav {
             bottom: 0;
             position: sticky;
-            border-top: 1px solid #ccc;
+            border-top: 1px solid #eee;
             width: 100%;
             height: 49px;
+            background: #fff;
           }
           h2 {
             font-weight: 800;
             font-size: 21px;
-            padding: 10px;
+            padding: 15px;
           }
         `}
       </style>
